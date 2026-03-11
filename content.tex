@@ -40,7 +40,38 @@ Use the Mising-Partial-Implemented status markers in your final report. Use the 
 
 \textbf{What were the main structural changes in your original design? Was it easy to localize the change and assess its impact compared to directly changing the code (without messing around with the design)?}
 
+During A2, several structural changes were made to improve the design of the Catan implementation and support new requirements. One of the biggest changes was how players take turns. In A1, the game only supported a computer player, and turns were executed randomly. The logic for taking a turn was handled directly inside the Board class, and all actions, such as building roads, settlements, or cities, were randomly selected. \newline
+\newline
+For A2, we needed to support both human and computer players. To accommodate this change, we redesigned the player structure. The Player class was made abstract, and an abstract method takeTurn() was made. Two subclasses were created: \newlin
+    - ComputerPlayer: overrides takeTurn() and randomly chooses actions (similar to A1)  \newline
+    - HumanPlayer: overrides takeTurn() and allows the user to input commands using Scanner
+\newline
+This design allows different player types to share common functionality while implementing their own turn behavior. \newline
+\newline
+Another important structural addition was the TurnManager class. This class manages the entire turn lifecycle, including actions during that turn, and determines who is taking the turn- human or computer. Instead of duplicating turn logic for each player type, the TurnManager simply calls the appropriate player's takeTurn() method. The TurnManager also manages the turn state using a TurnState enum, while players interpret commands using a UserInput enum (such as ROLL, LIST, BUILD, and GO). \newline
+\newline
+We also added a new Robber class to represent the robber piece in the game. The robber is triggered when certain conditions occur (such as a dice roll of 7). The robber logic needed to interact with both the Board and the player turn flow, which required modifications in the turnManager implementation and in the Board class. This was one of the more difficult features to implement because it involved coordinating multiple classes and game states. \newline
+Several other improvements were made based on feedback from A1: \newline
+    - The road was removed from extending the building, since a road is not technically considered a building \newline
+    - New methods were added to the Player class, such as listResources() and hasResources() \newline
+    - The takeTurn() method was removed from the Board class to improve separation of responsibilities. \newline
+    - Some class names were corrected for clarity and consistency (Roads to Road, Cities to City) \newline
+\newline
+Some changes were easier to localize than others. The introduction of HumanPlayer and ComputerPlayer was relatively straightforward because both classes extend the Player class and override the same abstract method. This allowed us to add new player behavior without heavily modifying the rest of the system. However, other changes were more complex. Implementing the TurnManager state machine and the Robber feature required modifying multiple parts of the system because they interact with the board, players, and turn logic. Managing both the UserInput enum and the TurnState enum also required careful coordination.  \newline
+\newline
+Overall, making these changes at the design level first helped us better understand the impact of the modifications compared to directly changing code without considering the design. The use of abstraction and separate classes helped isolate many of the changes and improved the overall structure of the program. \newline
+
 \textbf{Why was the automaton-based modelling useful and what benefits does it provide compared to the specification in the attached PDF? How did you translate the automaton-based model to program code?}
+
+Automaton-based modelling was useful because it allowed us to clearly represent the different states of a player’s turn and the transitions between them. In a game like Catan, a turn follows a specific sequence of actions, such as rolling dice, performing actions like building or trading, and then ending the turn. Using an automaton model helped us visualize this flow as states and transitions, which made the logic easier to understand and organize. Compared to the specification in the PDF, which mainly describes the rules in text form, the automaton model provides a visual and structured representation of the game flow. This makes it easier to see which actions are valid at each stage of the turn and what conditions cause the game to move from one state to another. It also helps avoid illegal actions, since the program only allows transitions that are defined in the model. \newline
+\newline
+Another benefit is that automaton-based modelling improves maintainability and debugging. Because each state has clearly defined transitions, it becomes easier to identify where errors occur and to modify the system if new rules are added. \newline
+\newline
+We translated the automaton model into code by implementing a state machine in the TurnManager class. Each state of a player's turn is represented using the TurnState enum, which includes STARTTURN, ROBBER, DOACTION, and ENDTURN. \newline
+\newline
+The TurnManager keeps track of the current state and changes it based on game events and player actions. For example, a turn begins at STARTTURN, where the dice are rolled. If a 7 is rolled, the game moves to the ROBBER state to handle the robber logic. After that, the player enters DOACTION, where they can perform actions such as building or listing resources. Finally, the game moves to ENDTURN, where the turn finishes and control passes to the next player. \newline
+\newline
+Player commands are represented using a UserInput enum, and the TurnManager checks both the current state and the command to determine what actions are allowed and how the state should transition. This directly implements the automaton model by mapping states to enums and transitions to logic in the TurnManager.\newline
 
 \section{Revise the program code and finish the functionality}
 

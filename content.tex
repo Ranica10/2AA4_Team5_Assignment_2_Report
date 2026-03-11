@@ -27,14 +27,57 @@ The second assignment of this course has enhanced our previous implementation of
     \hline
 \end{longtable}
 
-\id{The goal of this matrix is to aid your TA verify the satisfaction of requirements. If the table is superficial or too verbose, your TA will have a hard time verifying the completeness of your deliverable, and that will result in lost marks.
-Use the Mising-Partial-Implemented status markers in your final report. Use the code{} command to format file names and Java code elements, such as class names, method names, etc.}
-
 \section{Getting ready for change}
 
 \textbf{How many unit tests did you end up writing?}
 
+We wrote 18 unit tests. This is how they are broken down:
+
+\textbf{BuildingLogicTest - Ranica Chawla (5 tests)}
+
+\texttt{placeSettlementOnBoard()} - Test that placing a settlement on a node currently marks the node as occupied and assigns ownership to the correct player
+
+\texttt{placeCityOnBoard()} -  Test that placing a city on a node correctly marks the node as occupied and assigns ownership to the correct player
+
+\texttt{placeRoadOnBoard()} - Test that placing a road on a node correctly marks the node as occupied and assigns ownership to the correct player 
+
+\texttt{shouldUpgradeSettlementToCity()} - Tests that upgrading a settlement to a city replaces the existing settlement at the node
+
+\texttt{nodesShouldStartEmpty()} - Test if at board creation, all the nodes begin unoccupied
+
+\textbf{GameLogicTest - Raadhikka Gupta (7 tests)}
+
+\texttt{testDiceRollRange()} - Test that the Dice rolls are within the expected ranges
+
+\texttt{testGameInit()} - Test that the game is initialized correctly
+
+\texttt{testMinRounds()} - Test that the minimum number of rounds works
+
+\texttt{testMaxRounds()} - Test that the maximum number of rounds works
+
+\texttt{testResourcesDistribution\_notSeven()} - Test if the resource is given to a player
+
+\texttt{testResourcesDistribution\_seven()} - Test if the resource is not given to a player when 7 is rolled
+
+\texttt{testConsoleOutput()} - Test that the game prints output and runs without crashing
+
+\textbf{PlayerLogicTest - Krisha Patel, Nitya Patel (6 tests)}
+
+\texttt{testPlayerSwitchingTurns()} - Test switching turns doesn’t break the game
+
+\texttt{testSettlementAddsOnePoint()} - Test that adding a settlement increases the player's points by 1
+
+\texttt{testCityAddsTwoPoint()} - Test that adding a city increases the player's points by 2
+
+\texttt{testRoadAddsZeroPoint()} - Test that adding a road does NOT give points
+
+\texttt{testPointsAfterBuilding()} - Test that points after taking a turn are at least as much as before
+
+\texttt{testPlayerBuildsIfResourcesHigh()} - Tests that players take building actions when resource > 7
+
 \textbf{If you measured coverage, which tool did you use and what was you coverage?}
+
+We did not measure any coverage for this assignment.
 
 \section{Changing and extending your design}
 

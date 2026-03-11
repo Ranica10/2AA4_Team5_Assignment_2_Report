@@ -29,6 +29,9 @@ The second assignment of this course has enhanced our previous implementation of
 
 \section{Getting ready for change}
 
+\textbf{Test Case Results}
+
+
 \textbf{How many unit tests did you end up writing?}
 
 We wrote 18 unit tests. This is how they are broken down:
@@ -126,9 +129,23 @@ Player commands are represented using a UserInput enum, and the TurnManager chec
 
 \textbf{What was the benefit of having unit tests at this stage?}
 
+Having unit tests at this stage was beneficial because our system underwent significant structural changes when introducing new components such as the TurnManager, command parsing with regex, and different types of players. These changes required refactoring existing classes and modifying how different components interacted. Without tests, it would have been difficult to verify whether the new changes unintentionally broke the functionality that already existed.
+\newline
+The unit tests provided an extra layer of safety by quickly identifying errors introduced during the refactoring stage. For example, when modifying the turn execution logic and converting that method into a state machine, the tests ensured that core game behaviors such as building structures, resource updates, and player scoring continued to function correctly. This allowed changes to be made without needing to worry about the previous features because any unexpected behavior could be detected immediately by running the tests.
+\newline
+
 \textbf{What were some of the challenges in these iterations (technical or conceptual)? What tools or integrated tool chains would help you in those steps? (You can specify a few abstract ideas, you don’t have to name specific tools or techniques.)}
 
 \textbf{Elaborate on the OO mechanisms and SOLID principles in your implementation. Are these any different from the ones used in the design? If they are: why?}
+
+In the revised implementation, object-oriented mechanisms were used to improve the structure of the program as new functionality such as human input and turn management was introduced. The most important mechanism applied was encapsulation, where each class is responsible for managing its own state and behavior. For example, now the Board class only encapsulates the state of the game board including nodes, tiles, and building placement without focusing too much on the details of taking turns (as it did previously). 
+\newline
+Instead, the TurnManager class was assigned the responsibility to encapsulate all the logic for managing a player’s turn, including the state transitions between rolling the dice, performing actions, and ending the turn. This directly ties into the SOLID principle of single-responsibility between classes. Instead of placing all gameplay logic inside the Game or Board classes, the introduction of the TurnManager allows turn-related logic to be handled independently. The Game class is now responsible only for managing the overall game flow and iterating through players and rounds, while the TurnManager handles the sequence of actions within a turn.
+\newline
+In addition, the Open/Closed Principle was used by designing the system so that additional commands or actions can be added without needing to conduct any major refactoring/structural changes. For example, the TurnManager processes commands through a switch structure based on a pre-defined enum. This means that new commands could be added with minimal modifications while preserving the overall structure of the system by simply adding it to the Actions enum and then including a new case in the switch statement.
+\newline
+Compared to the original design, the main difference is the introduction of the TurnManager as a separate control component. As previously mentioned, in the earlier design, some of the turn-related logic was more tightly coupled with other classes such as Board, which previously handled the logic for doing the player’s turn. Overall, the OO principles used in the design stage remained largely the same, but the new implementation/features required a few adjustments to ensure that responsibilities were clearly distributed across classes while supporting the new functionality.
+\newline
 
 \section{Roles and responsibilities}
 

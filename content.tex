@@ -104,7 +104,7 @@ We did not measure any coverage for this assignment.
 
 \section{Changing and extending your design}
 
-\textbf{What were the main structural changes in your original design? Was it easy to localize the change and assess its impact compared to directly changing the code (without messing around with the design)?}
+\textbf{What were the main structural changes in your original design? Was it easy to localize the change and assess its impact compared to directly changing the code (without messing around with the design)?}\newline\newline
 During A2, several structural changes were made to improve the design of the Catan implementation and support new requirements. One of the biggest changes was how players take turns. In A1, the game only supported a computer player, and turns were executed randomly. The logic for taking a turn was handled directly inside the Board class, and all actions, such as building roads, settlements, or cities, were randomly selected. \newline
 \newline
 For A2, we needed to support both human and computer players. To accommodate this change, we redesigned the player structure. The Player class was made abstract, and an abstract method takeTurn() was made. Two subclasses were created:
@@ -147,16 +147,27 @@ Player commands are represented using a UserInput enum, and the TurnManager chec
 
 \textbf{Which parts of your system did break and how did you resolve those issues?}
 \newline \newline
+Several parts of the system broke when we improved on our original implementation. 
+\newline\newline
+One issue occurred when the executing turns was moved from Board class to TurnManager and Player classes. Originally, the Board class handled the turn logic directly. After added the TurnManager and the state machine, some methods that needed longer worked correctly because the flow had changed. This caused issues where turns were not progressing properly or actions were being triggered at the wrong time. We resolved this by putting all turn-related logic inside TurnManager and ensuring that Board was only responsible for managing the board state, for example placing a building and resource production.
+\newline\newline
+We also had issues when adding the Robber functionality. The robber works with both the dice roll and the board state, which meant many parts needed to work together to run correctly. This was solved by adding a robber management class and calling it from the TurnManager when the game state was reached.
+\newline\newline
+Overall, most of the issues were related to refactoring responsibilities between classes. These problems were resolved by separating responsibilities between Board which contained the board state, Player which contained the player behavior, and TurnManager which contained the turn flow.
+\newline\newline
 
 \textbf{What was the benefit of having unit tests at this stage?}
-\newline
+\newline\newline
 Having unit tests at this stage was beneficial because our system underwent significant structural changes when introducing new components such as the TurnManager, command parsing with regex, and different types of players. These changes required refactoring existing classes and modifying how different components interacted. Without tests, it would have been difficult to verify whether the new changes unintentionally broke the functionality that already existed.
 \newline \newline
 The unit tests provided an extra layer of safety by quickly identifying errors introduced during the refactoring stage. For example, when modifying the turn execution logic and converting that method into a state machine, the tests ensured that core game behaviors such as building structures, resource updates, and player scoring continued to function correctly. This allowed changes to be made without needing to worry about the previous features because any unexpected behavior could be detected immediately by running the tests.
 \newline
 
 \textbf{What were some of the challenges in these iterations (technical or conceptual)? What tools or integrated tool chains would help you in those steps? (You can specify a few abstract ideas, you don’t have to name specific tools or techniques.)}
-\newline \newline
+\newline\newline
+One challenge during these iterations was changing the structure of the system to make sure that the game still worked correctly. Adding new classes like TurnManger, RobberActionsManager, and the turn states, and methods that implement the human and computer takeTurn separately would require modifying and changing the logic of several classes to make sure that they all worked together correctly. Another challenge was to make sure that the turn states happened in the correct order, the logs to the player were shown, and the players could not do actions at the wrong time. Tools to help with this process would be unit testing tools to check if the program still work after the changes, and UML modeling to help visualize how the code would work before writing the code.
+\newline
+
 \textbf{Elaborate on the OO mechanisms and SOLID principles in your implementation. Are these any different from the ones used in the design? If they are: why?}
 \newline \newline
 In the revised implementation, object-oriented mechanisms were used to improve the structure of the program as new functionality such as human input and turn management was introduced. The most important mechanism applied was encapsulation, where each class is responsible for managing its own state and behavior. For example, now the Board class only encapsulates the state of the game board including nodes, tiles, and building placement without focusing too much on the details of taking turns (as it did previously). 
@@ -171,7 +182,7 @@ Compared to the original design, the main difference is the introduction of the 
 \section{Roles and responsibilities}
 
 \begin{itemize}
-    \item {\textbf{Raadhikka Gupta} }
+    \item {\textbf{Raadhikka Gupta} - contributed to the UML diagram and updated the UML after refactoring, worked on the \texttt{RobberActionManager}, \texttt{Board}, and \texttt{TurnManager} classes, worked with implementing the visualizer, and developed test cases for the \texttt{GameLogic} and the report.}
     \item {\textbf{Ranica Chawla} - contributed to the UML diagram, \texttt{TurnManager} class, resolved SonarQube quality issues, worked with implementing the visualizer, developed test cases for \texttt{BuildingLogic}, and the report.}
 	\item {\textbf{Nitya Patel} - contributed to the UML diagram, implemented Assignment 1 feedback in the code, \texttt{ComputerPlayer} class, \texttt{PlayerCommand}, resolved SonarQube quality issues, developed test cases for \texttt{PlayerLogic} and the report.} 
 	\item {\textbf{Krisha Patel} - contributed to the UML diagram, implemented Assignment 1 feedback, \texttt{HumanPlayer} class, resolved SonarQube quality issues, added parsing functionality, developed test cases for \texttt{PlayerLogic} and \texttt{ParserLogic}, and the report.}
